@@ -2,6 +2,9 @@
 
 > add, remove rows and columns to / from 2 dimensional arrays
 
+[![NPM version](https://badge.fury.io/js/sizeable-table.svg)](https://www.npmjs.com/package/sizeable-table/)
+[![Build Status](https://secure.travis-ci.org/commenthol/sizeable-table.svg?branch=master)](https://travis-ci.org/commenthol/sizeable-table)
+
 ## installation 
 
     npm i sizeable-table 
