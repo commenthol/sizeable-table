@@ -1,7 +1,6 @@
 const ROW = 0
 const COL = 1
 
-type Fill = string | number | undefined
 interface Dimension {
   [index: number]: number
 }
@@ -9,7 +8,7 @@ interface Options {
   min?: Dimension
   max?: Dimension
   dim?: Dimension
-  fill?: Fill
+  fill?: any
 }
 
 export class SizeableTable {
@@ -21,8 +20,16 @@ export class SizeableTable {
   public max: Dimension
   public dim: Dimension
   public table: any[]
-  private _fill: Fill
+  private _fill: any
 
+  /**
+   * @constructor
+   * @param table - 2 dimensional array
+   * @param options
+   * @param options.max - max. dimensions of table
+   * @param options.min - min. dimensions of table
+   * @param options.fill - content to fill new rows/ columns
+   */
   constructor(table?: any[], options?: Options) {
     const { min = [1, 0], max = [Infinity, Infinity], fill } = options || {}
 
@@ -46,7 +53,13 @@ export class SizeableTable {
     }
   }
 
-  public create(dim: Dimension, fill?: Fill): any[] | undefined {
+  /**
+   * creates a new table with dimensions `dim`
+   * @param dim - dimension of new table
+   * @param fill - content to fill whole new table
+   * @returns `undefined` if min or max dimensions where not followed otherwith the new table
+   */
+  public create(dim: Dimension, fill?: any): any[] | undefined {
     if (
       SizeableTable.exceeds(dim, this.max) ||
       SizeableTable.exceeds(this.min, dim)
@@ -59,7 +72,13 @@ export class SizeableTable {
     return this.table
   }
 
-  public addRow(row?: number, fill?: Fill | any[] ): boolean {
+  /**
+   * adds a new row
+   * @param row - number adds at that position, `undefined` the new row is created at the end
+   * @param fill - content to fill new row
+   * @returns `false` if creation went wrong
+   */
+  public addRow(row?: number, fill?: any | any[]): boolean {
     if (this.dim[ROW] >= this.max[ROW]) {
       return false
     }
@@ -70,7 +89,7 @@ export class SizeableTable {
     let arr = new Array(this.dim[COL]).fill(_fill)
 
     if (Array.isArray(fill)) {
-      arr = arr.map((_, i) => fill[i] !== undefined ? fill[i] : _fill)
+      arr = arr.map((_, i) => (fill[i] !== undefined ? fill[i] : _fill))
     }
 
     if (row !== undefined) {
@@ -82,6 +101,11 @@ export class SizeableTable {
     return true
   }
 
+  /**
+   * removes a row
+   * @param row - number removes at that position, `undefined` at the end
+   * @returns `false` if removal went wrong
+   */
   public removeRow(row?: number): boolean {
     if (this.dim[ROW] <= this.min[ROW]) {
       return false
@@ -98,14 +122,22 @@ export class SizeableTable {
     return true
   }
 
-  public addColumn(col?: number, fill?: Fill | any[]): boolean {
+  /**
+   * add a column
+   * @param col - number adds at that position, `undefined` at the end
+   * @returns `false` if adding column went wrong
+   */
+  public addColumn(col?: number, fill?: any | any[]): boolean {
     if (this.dim[COL] >= this.max[COL]) {
       return false
     }
 
-    const getFill = (i: number) => Array.isArray(fill) 
-      ? fill[i] !== undefined ? fill[i] : this._fill
-      : fill || this._fill
+    const getFill = (i: number) =>
+      Array.isArray(fill)
+        ? fill[i] !== undefined
+          ? fill[i]
+          : this._fill
+        : fill || this._fill
 
     this.dim[COL]++
 
@@ -116,6 +148,11 @@ export class SizeableTable {
     return true
   }
 
+  /**
+   * removes a column
+   * @param col - number removes at that position, `undefined` at the end
+   * @returns `false` if removal went wrong
+   */
   public removeColumn(col?: number): boolean {
     if (this.dim[COL] <= this.min[COL]) {
       return false
