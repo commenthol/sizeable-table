@@ -24,6 +24,7 @@ export class SizeableTable {
   public dim: Dimension
   public table: any[][]
   private _fill: any
+  private _flags: any
 
   /**
    * @constructor
@@ -51,6 +52,23 @@ export class SizeableTable {
 
     this.dim[ROW] = table.length
     this.dim[COL] = SizeableTable.maxCols(table)
+    this.updateFlags()
+  }
+
+  public get canAddRow () {
+    return this._flags.canAddRow
+  }
+
+  public get canAddColumn () {
+    return this._flags.canAddColumn
+  }
+
+  public get canRemoveRow () {
+    return this._flags.canRemoveRow
+  }
+
+  public get canRemoveColumn () {
+    return this._flags.canRemoveColumn
   }
 
   /**
@@ -69,6 +87,7 @@ export class SizeableTable {
 
     this.dim = dim
     this.table = new Array(dim[ROW]).fill(1).map(() => new Array(dim[COL]).fill(fill))
+    this.updateFlags()
     return this.table
   }
 
@@ -97,6 +116,7 @@ export class SizeableTable {
     } else {
       this.table.push(arr)
     }
+    this.updateFlags()
 
     return true
   }
@@ -118,6 +138,7 @@ export class SizeableTable {
     } else {
       this.table.pop()
     }
+    this.updateFlags()
 
     return true
   }
@@ -144,6 +165,7 @@ export class SizeableTable {
     this.table.forEach((row, i) =>
       col !== undefined ? row.splice(col, 0, getFill(i)) : row.push(getFill(i))
     )
+    this.updateFlags()
 
     return true
   }
@@ -163,6 +185,7 @@ export class SizeableTable {
     this.table.forEach(row =>
       col !== undefined ? row.splice(col, 1) : row.pop()
     )
+    this.updateFlags()
 
     return true
   }
@@ -174,7 +197,7 @@ export class SizeableTable {
    */
   public paste (insert: any[][], pos?: Dimension) : void {
     pos = pos || [0, 0]
-    const rows = insert.length 
+    const rows = insert.length
     const cols = SizeableTable.maxCols(insert)
 
     for (let y = 0; y < rows; y++) {
@@ -197,6 +220,16 @@ export class SizeableTable {
         }
         this.table[posY][posX] = insert[y][x]
       }
+    }
+  }
+
+  private updateFlags() {
+    const { dim, max, min } = this // tslint:disable-line no-this-assignment
+    this._flags = {
+      canAddColumn: (dim[COL] < max[COL]),
+      canAddRow: (dim[ROW] < max[ROW]),
+      canRemoveColumn: (dim[COL] > min[COL]),
+      canRemoveRow: (dim[ROW] > min[ROW]),
     }
   }
 }

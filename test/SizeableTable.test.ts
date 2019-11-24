@@ -77,6 +77,7 @@ describe('SizeableTable', function () {
 
     it('should remove last column', function () {
       const table = new SizeableTable([[1, 2], [3, 4]])
+      assert.strictEqual(table.canRemoveColumn, true)
       table.removeColumn()
       assert.deepStrictEqual(table.table, [[1], [3]])
       assert.deepStrictEqual(table.dim, [2, 1])
@@ -84,6 +85,7 @@ describe('SizeableTable', function () {
 
     it('should remove first row', function () {
       const table = new SizeableTable([[1, 2], [3, 4]])
+      assert.strictEqual(table.canRemoveRow, true)
       table.removeColumn(0)
       assert.deepStrictEqual(table.table, [[2], [4]])
       assert.deepStrictEqual(table.dim, [2, 1])
@@ -91,6 +93,7 @@ describe('SizeableTable', function () {
 
     it('should not addRow if max row is reached', function () {
       const table = new SizeableTable([[1], [2]], { max: [2, 2] })
+      assert.strictEqual(table.canAddRow, false)
       const result = table.addRow()
       assert.strictEqual(result, false)
       assert.deepStrictEqual(table.table, [[1], [2]])
@@ -99,6 +102,7 @@ describe('SizeableTable', function () {
 
     it('should not removeRow if min row is reached', function () {
       const table = new SizeableTable([[1], [2]], { min: [2, 1] })
+      assert.strictEqual(table.canRemoveRow, false)
       const result = table.removeRow()
       assert.strictEqual(result, false)
       assert.deepStrictEqual(table.table, [[1], [2]])
@@ -107,6 +111,7 @@ describe('SizeableTable', function () {
 
     it('should not addColumn if max column is reached', function () {
       const table = new SizeableTable([[1, 2]], { max: [1, 2] })
+      assert.strictEqual(table.canAddColumn, false)
       const result = table.addColumn()
       assert.strictEqual(result, false)
       assert.deepStrictEqual(table.table, [[1, 2]])
@@ -115,6 +120,7 @@ describe('SizeableTable', function () {
 
     it('should not removeColumn if min column is reached', function () {
       const table = new SizeableTable([[1, 2]], { min: [1, 2] })
+      assert.strictEqual(table.canRemoveColumn, false)
       const result = table.removeColumn()
       assert.strictEqual(result, false)
       assert.deepStrictEqual(table.table, [[1, 2]])
