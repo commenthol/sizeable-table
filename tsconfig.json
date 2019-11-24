@@ -9,7 +9,8 @@
     "moduleResolution": "node",
     "outDir": "./lib",
     "strict": true,
-    "sourceMap": false
+    "sourceMap": false,
+    "removeComments": true
   },
   "include": [
     "src"
