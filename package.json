@@ -1,6 +1,6 @@
 {
   "name": "sizeable-table",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "add, remove rows and columns to / from 2 dimensional arrays",
   "keywords": [],
   "homepage": "https://github.com/commenthol/sizeable-table#readme",
