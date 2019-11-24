@@ -1,10 +1,11 @@
+.*
 .DS_Store
 *.log
 *.tgz
 coverage/
-esm/
-lib/
+jest.config.js
 node_modules/
-types/
-.*
-
+src/
+test/
+tsconfig.json
+tslint.json
