@@ -1,0 +1,63 @@
+{
+  "name": "sizeable-table",
+  "version": "0.1.0",
+  "description": "add, remove rows and columns to / from 2 dimensional arrays",
+  "keywords": [],
+  "homepage": "https://github.com/commenthol/sizeable-table#readme",
+  "bugs": {
+    "url": "https://github.com/commenthol/sizeable-table/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/commenthol/sizeable-table.git"
+  },
+  "license": "MIT",
+  "author": "commenthol <commenthol@gmail.com>",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "typings": "types/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "all": "npm run build && npm run coverage && npm run lint",
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:cjs": "rimraf lib types && tsc",
+    "build:esm": "rimraf esm && tsc --module esnext --target es2017 --outdir esm",
+    "coverage": "jest --coverage",
+    "dev": "nodemon --exec ts-node src/index.ts --watch src",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepublishOnly": "npm run all",
+    "tdd": "jest --watch",
+    "test": "jest"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/jest": "^24.0.23",
+    "@types/node": "^12.12.12",
+    "husky": "^3.1.0",
+    "jest": "^24.9.0",
+    "nodemon": "^2.0.1",
+    "prettier": "^1.19.1",
+    "rimraf": "^3.0.0",
+    "ts-jest": "^24.2.0",
+    "ts-node": "^8.5.2",
+    "tslint": "^5.20.1",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.7.2"
+  },
+  "peerDependencies": {}
+}

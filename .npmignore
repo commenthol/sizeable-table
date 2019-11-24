@@ -1,0 +1,10 @@
+.DS_Store
+*.log
+*.tgz
+coverage/
+esm/
+lib/
+node_modules/
+types/
+.*
+
