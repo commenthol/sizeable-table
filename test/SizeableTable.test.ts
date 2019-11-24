@@ -138,7 +138,7 @@ describe('SizeableTable', function () {
     })
 
     it('should not create a 2x2 table if min rows is not matched', function () {
-      const table = new SizeableTable([], { min: [2, 2]})
+      const table = new SizeableTable([], { min: [2, 2] })
       assert.strictEqual(table.create([1, 2]), undefined)
     })
 
@@ -155,6 +155,61 @@ describe('SizeableTable', function () {
     it('should not create a 2x2 table if max columns is not matched', function () {
       const table = new SizeableTable([], { max: [2, 1] })
       assert.strictEqual(table.create([2, 2]), undefined)
+    })
+  })
+
+  describe('paste', function () {
+    it('shall paste a table', function () {
+      const table = new SizeableTable()
+      table.create([4, 4], 1)
+      const insert = new SizeableTable()
+      insert.create([2, 2], 2)
+      table.paste(insert.table, [1, 1])
+      // console.log(table.table)
+      assert.deepStrictEqual(table.table, [[1, 1, 1, 1], [1, 2, 2, 1], [1, 2, 2, 1], [1, 1, 1, 1]])
+    })
+
+    it('shall paste a table at [0, 0]', function () {
+      const table = new SizeableTable()
+      table.create([4, 4], 1)
+      const insert = new SizeableTable()
+      insert.create([2, 2], 2)
+      table.paste(insert.table)
+      // console.log(table.table)
+      assert.deepStrictEqual(table.table, [[2, 2, 1, 1], [2, 2, 1, 1], [1, 1, 1, 1], [1, 1, 1, 1]])
+    })
+
+    it('shall paste outside table at [3, 3]', function () {
+      const table = new SizeableTable(undefined, { fill: 0 })
+      table.create([4, 4], 1)
+      const insert = new SizeableTable()
+      insert.create([2, 2], 2)
+      table.paste(insert.table, [3, 3])
+      assert.deepStrictEqual(table.table,
+        [
+          [1, 1, 1, 1, 0],
+          [1, 1, 1, 1, 0],
+          [1, 1, 1, 1, 0],
+          [1, 1, 1, 2, 2],
+          [0, 0, 0, 2, 2]
+        ]
+      )
+    })
+
+    it('shall not paste outside max allowed range', function () {
+      const table = new SizeableTable(undefined, { fill: 0, max: [4, 4] })
+      table.create([4, 4], 1)
+      const insert = new SizeableTable()
+      insert.create([2, 2], 2)
+      table.paste(insert.table, [3, 3])
+      assert.deepStrictEqual(table.table,
+        [
+          [1, 1, 1, 1],
+          [1, 1, 1, 1],
+          [1, 1, 1, 1],
+          [1, 1, 1, 2]
+        ]
+      )
     })
   })
 })

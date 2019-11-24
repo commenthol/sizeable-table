@@ -15,11 +15,14 @@ export class SizeableTable {
   private static exceeds(source: Dimension, comp: Dimension): boolean {
     return source[ROW] > comp[ROW] || source[COL] > comp[COL]
   }
+  private static maxCols(table: any[]): number {
+    return table.reduce((length, arr) => Math.max(length, arr.length), 0)
+  }
 
   public min: Dimension
   public max: Dimension
   public dim: Dimension
-  public table: any[]
+  public table: any[][]
   private _fill: any
 
   /**
@@ -30,7 +33,7 @@ export class SizeableTable {
    * @param options.min - min. dimensions of table
    * @param options.fill - content to fill new rows/ columns
    */
-  constructor(table?: any[], options?: Options) {
+  constructor(table?: any[][], options?: Options) {
     const { min = [1, 0], max = [Infinity, Infinity], fill } = options || {}
 
     if (!Array.isArray(table)) {
@@ -47,10 +50,7 @@ export class SizeableTable {
     this.dim = [0, 0]
 
     this.dim[ROW] = table.length
-
-    for (let r = 0; r < table.length; r++) {
-      this.dim[COL] = Math.max(this.dim[COL], table[r].length)
-    }
+    this.dim[COL] = SizeableTable.maxCols(table)
   }
 
   /**
@@ -68,7 +68,7 @@ export class SizeableTable {
     }
 
     this.dim = dim
-    this.table = new Array(dim[ROW]).fill(new Array(dim[COL]).fill(fill))
+    this.table = new Array(dim[ROW]).fill(1).map(() => new Array(dim[COL]).fill(fill))
     return this.table
   }
 
@@ -165,5 +165,38 @@ export class SizeableTable {
     )
 
     return true
+  }
+
+  /**
+   * paste table at position
+   * @param insert - 2dim array to paste into table
+   * @param pos - position
+   */
+  public paste (insert: any[][], pos?: Dimension) : void {
+    pos = pos || [0, 0]
+    const rows = insert.length 
+    const cols = SizeableTable.maxCols(insert)
+
+    for (let y = 0; y < rows; y++) {
+      const posY = y + pos[ROW]
+      if (posY >= this.dim[ROW]) {
+        if (posY < this.max[ROW]) {
+          this.addRow()
+        } else {
+          break
+        }
+      }
+      for (let x = 0; x < cols; x++) {
+        const posX = x + pos[COL]
+        if (posX >= this.dim[COL]) {
+          if (posX < this.max[COL]) {
+            this.addColumn()
+          } else {
+            break
+          }
+        }
+        this.table[posY][posX] = insert[y][x]
+      }
+    }
   }
 }
